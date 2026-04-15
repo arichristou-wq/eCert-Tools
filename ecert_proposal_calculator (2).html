@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ecert — Proposal Calculator</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0D1F3C; --dark-blue: #1565C0; --mid-blue: #1976D2; --light-blue: #E3F2FD;
+    --teal: #00695C; --light-teal: #E0F2F1; --amber: #F57C00; --amber-light: #FFF8E1;
+    --purple: #6A1B9A; --purple-light: #F3E5F5;
+    --grey: #F5F5F5; --mid-grey: #9E9E9E; --dark-grey: #424242;
+    --white: #FFFFFF; --red: #C62828; --red-light: #FFEBEE; --green: #00695C; --green-light: #E8F5E9;
+  }
+  body { font-family: Arial, sans-serif; background: #F0F4F8; color: #1A2B38; min-height: 100vh; }
+
+  /* ── HEADER ── */
+  .header { background: var(--navy); padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .header-logo { color: white; font-size: 22px; font-weight: bold; }
+  .header-sub { color: #BBDEFB; font-size: 13px; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media(max-width: 760px) { .container { grid-template-columns: 1fr; } }
+
+  /* ── PANELS ── */
+  .panel { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; }
+  .panel-header { padding: 14px 20px; font-size: 14px; font-weight: bold; color: white; }
+  .panel-body { padding: 20px; }
+
+  /* ── FORM ── */
+  .form-group { margin-bottom: 16px; }
+  label { display: block; font-size: 12px; font-weight: bold; color: var(--dark-grey); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.04em; }
+  input, select { width: 100%; padding: 10px 12px; border: 1.5px solid #DDE3F0; border-radius: 6px; font-size: 14px; font-family: Arial, sans-serif; color: #1A2B38; background: white; transition: border-color 0.2s; }
+  input:focus, select:focus { outline: none; border-color: var(--dark-blue); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* ── PRODUCT CARDS ── */
+  .product-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+  .product-card { border: 2px solid #DDE3F0; border-radius: 8px; padding: 10px; cursor: pointer; text-align: center; transition: all 0.2s; }
+  .product-card:hover { border-color: var(--dark-blue); }
+  .product-card.selected-core { border-color: var(--dark-blue); background: var(--light-blue); }
+  .product-card.selected-unlimited { border-color: var(--teal); background: var(--light-teal); }
+  .product-card.selected-courses { border-color: var(--purple); background: var(--purple-light); }
+  .product-card .icon { font-size: 20px; margin-bottom: 4px; }
+  .product-card .name { font-size: 11px; font-weight: bold; color: var(--dark-grey); }
+  .product-card .price-from { font-size: 10px; color: var(--mid-grey); margin-top: 2px; }
+
+  /* ── RESULTS ── */
+  .result-box { background: var(--grey); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+  .result-label { font-size: 11px; color: var(--mid-grey); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .result-value { font-size: 22px; font-weight: bold; color: var(--navy); }
+  .result-sub { font-size: 12px; color: var(--dark-grey); margin-top: 2px; }
+  .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .result-small { background: var(--grey); border-radius: 6px; padding: 10px 12px; }
+  .result-small .rl { font-size: 10px; color: var(--mid-grey); text-transform: uppercase; }
+  .result-small .rv { font-size: 15px; font-weight: bold; color: var(--navy); margin-top: 2px; }
+
+  .includes-list { list-style: none; padding: 0; margin: 0; }
+  .includes-list li { font-size: 12px; color: var(--dark-grey); padding: 4px 0; border-bottom: 0.5px solid #EEE; display: flex; align-items: center; gap: 6px; }
+  .includes-list li:last-child { border-bottom: none; }
+  .check { color: var(--teal); font-weight: bold; }
+
+  .discount-tag { display: inline-block; background: var(--green-light); color: var(--green); font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; }
+  .floor-warning { background: var(--red-light); color: var(--red); font-size: 11px; padding: 6px 10px; border-radius: 6px; margin-top: 6px; display: none; }
+
+  /* ── BUTTONS ── */
+  .btn { display: block; width: 100%; padding: 12px; border: none; border-radius: 7px; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: opacity 0.2s; }
+  .btn:hover { opacity: 0.88; }
+  .btn-quote { background: var(--dark-blue); color: white; }
+  .btn-print { background: var(--teal); color: white; }
+
+  /* ── QUOTE OUTPUT ── */
+  #quote-output { display: none; grid-column: 1 / -1; }
+
+  /* ── PRINTABLE QUOTE ── */
+  .quote-doc { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+  .q-header { background: var(--navy); padding: 28px 32px; display: flex; justify-content: space-between; align-items: flex-start; }
+  .q-logo { color: white; font-size: 28px; font-weight: bold; }
+  .q-logo-sub { color: #BBDEFB; font-size: 13px; margin-top: 3px; }
+  .q-ref { text-align: right; color: #BBDEFB; font-size: 12px; }
+  .q-ref .ref-num { font-size: 18px; font-weight: bold; color: white; }
+
+  .q-customer { padding: 20px 32px; background: #F8FAFC; border-bottom: 1px solid #EEE; display: flex; justify-content: space-between; }
+  .q-customer-left h2 { font-size: 18px; color: var(--navy); }
+  .q-customer-left p { font-size: 13px; color: var(--dark-grey); margin-top: 3px; }
+  .q-customer-right { text-align: right; font-size: 12px; color: var(--dark-grey); }
+
+  .q-body { padding: 24px 32px; }
+  .q-section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--mid-grey); margin-bottom: 12px; font-weight: bold; }
+
+  .q-product-bar { display: flex; align-items: center; gap: 14px; background: var(--light-blue); border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; }
+  .q-product-bar.teal { background: var(--light-teal); }
+  .q-product-bar.purple { background: var(--purple-light); }
+  .q-product-icon { font-size: 28px; }
+  .q-product-name { font-size: 18px; font-weight: bold; color: var(--navy); }
+  .q-product-desc { font-size: 12px; color: var(--dark-grey); margin-top: 2px; }
+
+  .q-price-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
+  .q-price-table th { background: var(--navy); color: white; padding: 10px 14px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .q-price-table td { padding: 10px 14px; border-bottom: 1px solid #EEE; }
+  .q-price-table tr:last-child td { border-bottom: none; }
+  .q-price-table tr.total-row td { background: var(--light-blue); font-weight: bold; font-size: 15px; }
+  .q-price-table tr.total-row.teal td { background: var(--light-teal); }
+  .q-price-table tr.total-row.purple td { background: var(--purple-light); }
+  .q-price-table .strike { text-decoration: line-through; color: var(--mid-grey); font-size: 12px; }
+  .saving-tag { background: var(--green-light); color: var(--green); font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+
+  .q-includes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+  .q-inc-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--dark-grey); background: var(--grey); padding: 8px 10px; border-radius: 6px; }
+  .q-inc-check { color: var(--teal); font-size: 14px; font-weight: bold; }
+
+  .q-footer { background: var(--navy); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
+  .q-footer-left { color: #BBDEFB; font-size: 11px; }
+  .q-footer-right { color: #BBDEFB; font-size: 11px; text-align: right; }
+  .q-validity { background: var(--amber-light); border: 1px solid var(--amber); border-radius: 6px; padding: 10px 14px; font-size: 12px; color: #5D3A00; margin-bottom: 20px; }
+
+  .q-cta { background: var(--dark-blue); color: white; border-radius: 8px; padding: 16px 20px; text-align: center; margin-bottom: 20px; }
+  .q-cta h3 { font-size: 15px; margin-bottom: 4px; }
+  .q-cta p { font-size: 12px; color: #BBDEFB; }
+
+
+  /* ── UPFRONT DISCOUNT ── */
+  .upfront-section { border: 2px dashed #C62828; border-radius: 8px; padding: 14px; margin-top: 20px; background: #FFF8F8; }
+  .upfront-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .upfront-badge { background: #C62828; color: white; font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .upfront-title { font-size: 13px; font-weight: bold; color: #C62828; }
+  .upfront-warning { font-size: 11px; color: #C62828; background: #FFEBEE; border-radius: 5px; padding: 6px 10px; margin-bottom: 10px; line-height: 1.5; }
+  .upfront-options { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 8px; }
+  .upfront-opt { border: 2px solid #EEE; border-radius: 6px; padding: 8px; cursor: pointer; text-align: center; transition: all 0.2s; background: white; }
+  .upfront-opt:hover { border-color: #C62828; }
+  .upfront-opt.selected { border-color: #C62828; background: #FFEBEE; }
+  .upfront-opt .pct { font-size: 18px; font-weight: bold; color: #C62828; }
+  .upfront-opt .lbl { font-size: 10px; color: var(--mid-grey); margin-top: 2px; }
+  .upfront-result { background: #FFEBEE; border-radius: 6px; padding: 10px 12px; margin-top: 10px; font-size: 13px; color: #C62828; font-weight: bold; display: none; }
+
+  .no-print { }
+  @media print {
+    @page { 
+      margin: 10mm; 
+      size: A4;
+    }
+    body { background: white; }
+    .container { display: block; padding: 0; max-width: 100%; }
+    .no-print { display: none !important; }
+    .header { display: none !important; }
+    #quote-output { display: block !important; grid-column: auto; }
+    .quote-doc { box-shadow: none; border-radius: 0; }
+    .q-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .q-product-bar { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .q-price-table th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .q-footer { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .q-cta { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .q-validity { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .q-customer { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .q-includes { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header-logo">ecert</div>
+    <div class="header-sub">ecert Training  |  Compliance Training Proposal</div>
+  </div>
+  <div style="color:#BBDEFB;font-size:12px;text-align:right;">All prices exc. VAT</div>
+</div>
+
+<div class="container">
+
+  <!-- ── CALCULATOR PANEL ── -->
+  <div class="panel no-print">
+    <div class="panel-header" style="background:var(--dark-blue);">📋  Build Your Quote</div>
+    <div class="panel-body">
+
+      <!-- Customer Details -->
+      <div class="form-group">
+        <label>Customer / Organisation Name</label>
+        <input type="text" id="org-name" placeholder="e.g. Langdale Care Home" oninput="recalc()">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Contact Name</label>
+          <input type="text" id="contact-name" placeholder="e.g. Jane Smith" oninput="recalc()">
+        </div>
+        <div class="form-group">
+          <label>Contact Email</label>
+          <input type="email" id="contact-email" placeholder="jane@carehome.co.uk" oninput="recalc()">
+        </div>
+      </div>
+
+      <!-- Product Selection -->
+      <div class="form-group">
+        <label>Product</label>
+        <div class="product-cards">
+          <div class="product-card" id="card-core" onclick="selectProduct('core')">
+            <div class="icon">📘</div>
+            <div class="name">Core Compliance</div>
+            <div class="price-from">From £25/learner/yr</div>
+          </div>
+          <div class="product-card" id="card-unlimited" onclick="selectProduct('unlimited')">
+            <div class="icon">🚀</div>
+            <div class="name">Compliance Unlimited</div>
+            <div class="price-from">From £45/learner/yr</div>
+          </div>
+          <div class="product-card" id="card-courses" onclick="selectProduct('courses')">
+            <div class="icon">🎓</div>
+            <div class="name">Courses</div>
+            <div class="price-from">From £29/course</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Learner Count -->
+      <div class="form-group">
+        <label>Number of Learners / Staff</label>
+        <input type="number" id="learner-count" placeholder="e.g. 70" min="1" oninput="recalc()">
+        <div id="band-display" style="font-size:12px;color:var(--dark-blue);margin-top:4px;font-weight:bold;"></div>
+      </div>
+
+      <!-- Contract Year (subscriptions only) -->
+      <div class="form-group" id="year-group">
+        <label>Contract Year</label>
+        <select id="contract-year" onchange="recalc()">
+          <option value="1">Year 1 — Full price</option>
+          <option value="2">Year 2 — 12.5% discount</option>
+          <option value="3">Year 3 — 17.5% discount</option>
+          <option value="4">Year 4 — 25% discount ⭐ Best rate</option>
+        </select>
+      </div>
+
+      <!-- Number of Courses (courses product only) -->
+      <div class="form-group" id="courses-group" style="display:none;">
+        <label>Number of Courses</label>
+        <select id="num-courses" onchange="recalc()">
+          <option value="1">1 course</option>
+          <option value="2">2 courses</option>
+          <option value="3">3 courses (−10% discount)</option>
+          <option value="4">4 courses (−10% discount)</option>
+          <option value="5">5 courses (−15% discount)</option>
+        </select>
+      </div>
+
+      <!-- Back pocket discount -->
+      <div class="form-group">
+        <label>Agent Back-Pocket Discount (%)</label>
+        <input type="number" id="bp-discount" placeholder="0 — use to close only" min="0" max="20" value="0" oninput="recalc()">
+        <div id="floor-warning" class="floor-warning">⚠️ Below absolute price floor — escalate to Ari</div>
+      </div>
+
+
+      <!-- Paid Upfront Discount — Special Circumstances Only -->
+      <div class="upfront-section">
+        <div class="upfront-header">
+          <span class="upfront-badge">⚠️ Special Circumstances Only</span>
+          <span class="upfront-title">Paid Upfront Discount</span>
+        </div>
+        <div class="upfront-warning">
+          🔒 This section is for use only when a prospect commits to paying the full deal value upfront in one payment. Requires manager sign-off before offering. Do not use as a standard closing tool.
+        </div>
+        <label style="font-size:11px;font-weight:bold;color:var(--red);text-transform:uppercase;letter-spacing:0.04em;display:block;margin-bottom:8px;">Select Upfront Discount Level</label>
+        <div class="upfront-options">
+          <div class="upfront-opt" id="upfront-0" onclick="selectUpfront(0)">
+            <div class="pct">None</div>
+            <div class="lbl">No upfront disc.</div>
+          </div>
+          <div class="upfront-opt" id="upfront-10" onclick="selectUpfront(10)">
+            <div class="pct">10%</div>
+            <div class="lbl">Entry upfront</div>
+          </div>
+          <div class="upfront-opt" id="upfront-15" onclick="selectUpfront(15)">
+            <div class="pct">15%</div>
+            <div class="lbl">Standard upfront</div>
+          </div>
+          <div class="upfront-opt" id="upfront-20" onclick="selectUpfront(20)">
+            <div class="pct">20%</div>
+            <div class="lbl">Enhanced upfront</div>
+          </div>
+          <div class="upfront-opt" id="upfront-30" onclick="selectUpfront(30)">
+            <div class="pct">30%</div>
+            <div class="lbl">Max — mgr approval</div>
+          </div>
+        </div>
+        <div class="upfront-result" id="upfront-result"></div>
+      </div>
+
+      <button class="btn btn-quote" onclick="generateQuote()">✅  Generate Customer Quote</button>
+    </div>
+  </div>
+
+  <!-- ── LIVE RESULTS PANEL ── -->
+  <div class="panel no-print">
+    <div class="panel-header" style="background:var(--navy);">💰  Live Calculation</div>
+    <div class="panel-body">
+      <div id="result-area" style="color:var(--mid-grey);font-size:14px;padding:20px 0;text-align:center;">
+        Fill in the form to see pricing →
+      </div>
+    </div>
+  </div>
+
+  <!-- ── QUOTE OUTPUT ── -->
+  <div id="quote-output">
+    <div class="quote-doc" id="quote-doc">
+      <!-- filled by JS -->
+    </div>
+    <div class="no-print" style="text-align:center;margin-top:16px;">
+      <button class="btn btn-print" style="max-width:320px;margin:0 auto;" onclick="savePDF()">💾  Save Quote as PDF</button>
+      <p style="font-size:11px;color:var(--mid-grey);margin-top:8px;font-style:italic;">Saves a clean customer-facing PDF — calculator not included</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── PRICING DATA ──────────────────────────────────────────────────
+const BANDS = [
+  { label: "1 – 10 staff", min: 1, max: 10 },
+  { label: "5 – 15 learners", min: 5, max: 15 },
+  { label: "16 – 30 learners", min: 16, max: 30 },
+  { label: "31 – 60 learners", min: 31, max: 60 },
+  { label: "61 – 100 learners", min: 61, max: 100 },
+  { label: "101 – 200 learners", min: 101, max: 200 },
+  { label: "201+", min: 201, max: 99999 },
+];
+
+const BAND_DISC = [0, 0, 0.08, 0.1568, 0.2202, 0.2826, null];
+const YEAR_DISC = [0, 0, 0.125, 0.175, 0.25];
+
+// Core Compliance base price Y1 = £25, Unlimited base Y1 = £45
+function subPrice(base, bandIdx, yearDisc) {
+  const bd = BAND_DISC[bandIdx];
+  if (bd === null) return null;
+  return +(base * (1 - bd) * (1 - yearDisc)).toFixed(2);
+}
+
+// Course prices per band (1-10 = £29, 11-20=£49, 21-50=£89, 51-100=£149, 101-200=£249, 201+=contact)
+const COURSE_PRICES = [29, 49, 89, 149, 249, null];
+
+function getBandIdx(learners, product) {
+  if (product === 'courses') {
+    if (learners <= 10) return 0;
+    if (learners <= 20) return 1;
+    if (learners <= 50) return 2;
+    if (learners <= 100) return 3;
+    if (learners <= 200) return 4;
+    return 5;
+  } else {
+    if (learners < 5) return -1;
+    if (learners <= 15) return 1;
+    if (learners <= 30) return 2;
+    if (learners <= 60) return 3;
+    if (learners <= 100) return 4;
+    if (learners <= 200) return 5;
+    return 6;
+  }
+}
+
+// Floors
+const FLOORS = { core: 13.43, unlimited: 24.18, courses: 29 };
+
+let currentProduct = null;
+
+let currentUpfront = 0;
+
+function selectUpfront(pct) {
+  currentUpfront = pct;
+  [0,10,15,20,30].forEach(p => {
+    const el = document.getElementById('upfront-' + p);
+    if (el) el.className = 'upfront-opt' + (p === pct ? ' selected' : '');
+  });
+  recalc();
+}
+
+
+function selectProduct(p) {
+  currentProduct = p;
+  ['core','unlimited','courses'].forEach(x => {
+    document.getElementById('card-' + x).className = 'product-card';
+  });
+  document.getElementById('card-' + p).className = 'product-card selected-' + p;
+  document.getElementById('year-group').style.display = (p === 'courses') ? 'none' : 'block';
+  document.getElementById('courses-group').style.display = (p === 'courses') ? 'block' : 'none';
+  recalc();
+}
+
+function fmt(n) { return '£' + n.toFixed(2); }
+
+function recalc() {
+  const learners = parseInt(document.getElementById('learner-count').value) || 0;
+  const bpDisc = parseFloat(document.getElementById('bp-discount').value) || 0;
+  const yearVal = parseInt(document.getElementById('contract-year').value) || 1;
+  const numCourses = parseInt(document.getElementById('num-courses').value) || 1;
+
+  document.getElementById('floor-warning').style.display = 'none';
+
+  if (!currentProduct || learners < 1) {
+    document.getElementById('result-area').innerHTML = '<div style="color:var(--mid-grey);font-size:14px;padding:20px 0;text-align:center;">Select a product and enter learner count →</div>';
+    document.getElementById('band-display').textContent = '';
+    return;
+  }
+
+  const bandIdx = getBandIdx(learners, currentProduct);
+
+  if (currentProduct !== 'courses' && bandIdx === -1) {
+    document.getElementById('band-display').textContent = '⚠️ Minimum 5 learners for subscription plans';
+    document.getElementById('result-area').innerHTML = '<div style="color:var(--red);font-size:13px;">Minimum 5 learners for Core Compliance and Compliance Unlimited.</div>';
+    return;
+  }
+
+  if (bandIdx === 6 || (currentProduct === 'courses' && bandIdx === 5)) {
+    document.getElementById('band-display').textContent = '201+ — bespoke pricing, contact Ari';
+    document.getElementById('result-area').innerHTML = '<div style="color:var(--amber);font-size:13px;font-weight:bold;">201+ learners — bespoke pricing required.<br>Contact Ari to build this quote.</div>';
+    return;
+  }
+
+  let basePerLearner, yearDiscRate, totalBeforeBP, pricePerLearnerFinal, totalAnnual;
+  let courseMultiDisc = 0;
+  let html = '';
+
+  if (currentProduct === 'courses') {
+    const bandLabel = BANDS[bandIdx === 0 ? 0 : bandIdx].label;
+    document.getElementById('band-display').textContent = '✓ Band: ' + (bandIdx === 0 ? '1–10 staff' : bandIdx === 1 ? '11–20 staff' : bandIdx === 2 ? '21–50 staff' : bandIdx === 3 ? '51–100 staff' : '101–200 staff');
+
+    const pricePerCourse = COURSE_PRICES[bandIdx];
+    if (numCourses >= 5) courseMultiDisc = 0.15;
+    else if (numCourses >= 3) courseMultiDisc = 0.10;
+    const subtotal = pricePerCourse * numCourses;
+    const discAmt = subtotal * courseMultiDisc;
+    totalBeforeBP = subtotal - discAmt;
+    const bpDiscAmt = totalBeforeBP * (bpDisc / 100);
+    const finalTotal = totalBeforeBP - bpDiscAmt;
+    const floor = FLOORS.courses;
+
+    if (bpDisc > 20 || currentUpfront > 30 || (numCourses === 1 && finalTotal < floor)) {
+      document.getElementById('floor-warning').style.display = 'block';
+    }
+
+    html = `
+      <div class="result-box" style="background:var(--purple-light);">
+        <div class="result-label">Total Quote</div>
+        <div class="result-value" style="color:var(--purple);">${fmt(finalTotal)}</div>
+        <div class="result-sub">${numCourses} course${numCourses>1?'s':''} · ${learners} staff · 90-day access</div>
+      </div>
+      <div class="result-grid">
+        <div class="result-small">
+          <div class="rl">Price per course</div>
+          <div class="rv">${fmt(pricePerCourse)}</div>
+        </div>
+        <div class="result-small">
+          <div class="rl">Cost per staff member</div>
+          <div class="rv">${fmt(finalTotal / learners)}</div>
+        </div>
+        <div class="result-small">
+          <div class="rl">Multi-course discount</div>
+          <div class="rv">${courseMultiDisc > 0 ? '-' + (courseMultiDisc*100) + '%' : 'None'}</div>
+        </div>
+        <div class="result-small">
+          <div class="rl">Agent discount</div>
+          <div class="rv">${bpDisc > 0 ? '-' + bpDisc + '%' : 'None'}</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--dark-grey);padding:10px;background:var(--grey);border-radius:6px;">
+        <strong>Upgrade prompt:</strong> After 2+ course purchases, flag Core Compliance — 15 courses all year from ${fmt(subPrice(25, bandIdx, 0) * learners)}/yr
+      </div>`;
+  } else {
+    const base = currentProduct === 'core' ? 25 : 45;
+    const yearDisc = YEAR_DISC[yearVal];
+    const pricePerLearner = subPrice(base, bandIdx, yearDisc);
+    const bpDiscAmt = pricePerLearner * (bpDisc / 100);
+    const finalPPL = +(pricePerLearner - bpDiscAmt).toFixed(2);
+    const totalAnn = +(finalPPL * learners).toFixed(2);
+    const floor = currentProduct === 'core' ? FLOORS.core : FLOORS.unlimited;
+    const colour = currentProduct === 'core' ? 'var(--dark-blue)' : 'var(--teal)';
+    const lightBg = currentProduct === 'core' ? 'var(--light-blue)' : 'var(--light-teal)';
+
+    const bandBands = ['','5–15','16–30','31–60','61–100','101–200'];
+    document.getElementById('band-display').textContent = '✓ Band: ' + (bandBands[bandIdx] || '') + ' learners';
+
+    if (finalPPL < floor) document.getElementById('floor-warning').style.display = 'block';
+    if (bpDisc > 20) document.getElementById('floor-warning').style.display = 'block';
+
+    const y1PPL = subPrice(base, bandIdx, 0);
+    const saving = yearVal > 1 ? fmt((y1PPL - finalPPL) * learners) : null;
+
+    html = `
+      <div class="result-box" style="background:${lightBg};">
+        <div class="result-label">Annual Total</div>
+        <div class="result-value" style="color:${colour};">${fmt(totalAnn)}</div>
+        <div class="result-sub">${learners} learners · Year ${yearVal} rate${yearVal>1?' · '+saving+' saving vs Year 1':''}</div>
+      </div>
+      <div class="result-grid">
+        <div class="result-small">
+          <div class="rl">Per learner / year</div>
+          <div class="rv">${fmt(finalPPL)}</div>
+        </div>
+        <div class="result-small">
+          <div class="rl">Per learner / month</div>
+          <div class="rv">${fmt(finalPPL/12)}</div>
+        </div>
+        <div class="result-small">
+          <div class="rl">Year discount</div>
+          <div class="rv">${yearDisc > 0 ? '-' + (yearDisc*100) + '%' : 'None'}</div>
+        </div>
+        <div class="result-small">
+          <div class="rl">Agent discount</div>
+          <div class="rv">${bpDisc > 0 ? '-' + bpDisc + '%' : 'None'}</div>
+        </div>
+      </div>
+      ${yearVal === 1 && currentProduct === 'core' ? '<div style="font-size:12px;color:var(--dark-blue);padding:10px;background:var(--light-blue);border-radius:6px;"><strong>💡 Tip:</strong> Show Year 3 rate of '+fmt(subPrice(25,bandIdx,0.175)*learners)+' to demonstrate '+fmt((subPrice(25,bandIdx,0)-subPrice(25,bandIdx,0.175))*learners)+' saving — pushes multi-year commitment.</div>' : ''}
+      ${yearVal === 1 && currentProduct === 'unlimited' ? '<div style="font-size:12px;color:var(--teal);padding:10px;background:var(--light-teal);border-radius:6px;"><strong>💡 Tip:</strong> Show Year 3 rate of '+fmt(subPrice(45,bandIdx,0.175)*learners)+' to demonstrate '+fmt((subPrice(45,bandIdx,0)-subPrice(45,bandIdx,0.175))*learners)+' saving — pushes multi-year commitment.</div>' : ''}`;
+  }
+
+  // Upfront discount result
+  const upfrontEl = document.getElementById('upfront-result');
+  if (currentUpfront > 0 && (currentProduct === 'core' || currentProduct === 'unlimited')) {
+    const baseTotal = parseFloat(document.querySelector('.result-value') ? 0 : 0);
+    upfrontEl.style.display = 'block';
+    upfrontEl.innerHTML = '⚠️ Paid upfront discount (' + currentUpfront + '%) active — will be applied to final quote total';
+  } else if (currentUpfront > 0 && currentProduct === 'courses') {
+    upfrontEl.style.display = 'block';
+    upfrontEl.innerHTML = '⚠️ Paid upfront discount (' + currentUpfront + '%) active — will be applied to final quote total';
+  } else {
+    upfrontEl.style.display = 'none';
+  }
+  document.getElementById('result-area').innerHTML = html;
+}
+
+function generateQuote() {
+  const org = document.getElementById('org-name').value || 'Care Organisation';
+  const contact = document.getElementById('contact-name').value || '';
+  const email = document.getElementById('contact-email').value || '';
+  const learners = parseInt(document.getElementById('learner-count').value) || 0;
+  const bpDisc = parseFloat(document.getElementById('bp-discount').value) || 0;
+  const yearVal = parseInt(document.getElementById('contract-year').value) || 1;
+  const numCourses = parseInt(document.getElementById('num-courses').value) || 1;
+
+  if (!currentProduct || learners < 1) {
+    alert('Please select a product and enter learner count first.');
+    return;
+  }
+
+  // Apply upfront discount to total
+  const upfrontDisc = currentUpfront;
+  
+  const refNum = 'ECT-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random()*9000)+1000);
+  const today = new Date();
+  const validUntil = new Date(today); validUntil.setDate(validUntil.getDate()+30);
+  const fmt2 = d => d.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
+
+  const bandIdx = getBandIdx(learners, currentProduct);
+
+  let productName, productDesc, productIcon, colourClass, rows, total, includes;
+
+  if (currentProduct === 'courses') {
+    productName = 'ecert Courses';
+    productDesc = 'Per-course access · No contract · 90-day access per course';
+    productIcon = '🎓'; colourClass = 'purple';
+    const pricePerCourse = COURSE_PRICES[bandIdx];
+    let courseMultiDisc = numCourses >= 5 ? 0.15 : numCourses >= 3 ? 0.10 : 0;
+    const subtotal = pricePerCourse * numCourses;
+    const discAmt = +(subtotal * courseMultiDisc).toFixed(2);
+    const afterMulti = subtotal - discAmt;
+    const bpAmt = +(afterMulti * bpDisc/100).toFixed(2);
+    const afterBP2 = +(afterMulti - bpAmt).toFixed(2);
+    const upfrontAmt2 = +(afterBP2 * upfrontDisc/100).toFixed(2);
+    total = +(afterBP2 - upfrontAmt2).toFixed(2);
+    rows = [
+      ['Staff band', bandIdx===0?'1–10 staff':bandIdx===1?'11–20 staff':bandIdx===2?'21–50 staff':bandIdx===3?'51–100 staff':'101–200 staff', ''],
+      ['Price per course', '£'+pricePerCourse+'.00', ''],
+      ['Number of courses', numCourses + ' course' + (numCourses>1?'s':''), ''],
+      ['Subtotal', '', '£'+subtotal.toFixed(2)],
+      courseMultiDisc > 0 ? ['Multi-course discount ('+courseMultiDisc*100+'%)', '', '−£'+discAmt.toFixed(2)] : null,
+      bpDisc > 0 ? ['Discount ('+bpDisc+'%)', '', '−£'+bpAmt.toFixed(2)] : null,
+    ].filter(Boolean);
+    includes = ['Access for all '+learners+' staff members','90 days access per course','CPD-accredited certificates on completion','Full admin dashboard — track completions','Course available on any device, any time'];
+  } else {
+    const base = currentProduct === 'core' ? 25 : 45;
+    const yearDisc = YEAR_DISC[yearVal];
+    const ppl = subPrice(base, bandIdx, yearDisc);
+    const bpAmt = +(ppl * bpDisc/100).toFixed(2);
+    const afterBPPPL = +(ppl - bpAmt).toFixed(2);
+    const upfrontAmtSub = +(afterBPPPL * learners * upfrontDisc/100).toFixed(2);
+    const finalPPL = afterBPPPL;
+    total = +(afterBPPPL * learners - upfrontAmtSub).toFixed(2);
+    const y1Total = +(subPrice(base, bandIdx, 0) * learners).toFixed(2);
+    const saving = yearVal > 1 ? '£'+(y1Total - total).toFixed(2)+' saving vs Year 1' : null;
+
+    if (currentProduct === 'core') {
+      productName = 'Core Compliance'; productIcon = '📘'; colourClass = '';
+      productDesc = 'Annual subscription · 15 CQC mandatory courses · Overdue alerts · CQC-ready reports';
+      includes = ['15 CQC mandatory compliance courses','Live compliance dashboard — all staff at a glance','Automated overdue alerts before inspection','CQC-ready compliance report — one click','New starter onboarding pathways','Digital certificate management','Minimum '+learners+' learners'];
+    } else {
+      productName = 'Compliance Unlimited'; productIcon = '🚀'; colourClass = 'teal';
+      productDesc = 'Annual subscription · Full 60+ course library · Unlimited Care Certificates · Dedicated Account Manager';
+      includes = ['Full 60+ course library — unlimited access','Unlimited Care Certificate credits included','Executive compliance dashboard','Dedicated Account Manager','Role-based course assignment','Multi-site management dashboard','Automated renewals & reminders'];
+    }
+
+    const bandBands = ['','5–15','16–30','31–60','61–100','101–200'];
+    rows = [
+      ['Learner band', bandBands[bandIdx]+' learners', ''],
+      ['Contract year', 'Year '+yearVal+(yearVal>1?' ('+yearDisc*100+'% discount)':''), ''],
+      ['Price per learner / year', '', '£'+ppl.toFixed(2)],
+      ['Number of learners', learners, ''],
+      bpDisc > 0 ? ['Agent discount ('+bpDisc+'%)', '', '−£'+bpAmt.toFixed(2)+' per learner'] : null,
+      upfrontDisc > 0 ? ['⚠️ Paid upfront discount ('+upfrontDisc+'%)', 'Manager approved — full payment on signing', '−£'+upfrontAmtSub.toFixed(2)] : null,
+      saving ? ['Saving vs Year 1', saving, ''] : null,
+    ].filter(Boolean);
+  }
+
+  const doc = document.getElementById('quote-doc');
+  doc.innerHTML = `
+    <div class="q-header">
+      <div><div class="q-logo">ecert</div><div class="q-logo-sub">Compliance Training Platform</div></div>
+      <div class="q-ref"><div style="margin-bottom:4px;">QUOTATION</div><div class="ref-num">${refNum}</div><div style="margin-top:4px;">Date: ${fmt2(today)}</div></div>
+    </div>
+    <div class="q-customer">
+      <div class="q-customer-left">
+        <h2>${org}</h2>
+        <p>${contact}${email ? ' · ' + email : ''}</p>
+      </div>
+      <div class="q-customer-right">
+        <div>Prepared by: ecert Sales Team</div>
+        <div style="margin-top:4px;">ecerttraining.co.uk</div>
+        <div style="margin-top:4px;">info@ecerttraining.co.uk</div>
+      </div>
+    </div>
+    <div class="q-body">
+      <div class="q-section-title">Selected Product</div>
+      <div class="q-product-bar ${colourClass}">
+        <div class="q-product-icon">${productIcon}</div>
+        <div><div class="q-product-name">${productName}</div><div class="q-product-desc">${productDesc}</div></div>
+      </div>
+      <div class="q-section-title">Pricing Breakdown</div>
+      <table class="q-price-table">
+        <thead><tr><th>Item</th><th>Detail</th><th>Amount</th></tr></thead>
+        <tbody>
+          ${rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}
+          <tr class="total-row ${colourClass}"><td colspan="2"><strong>TOTAL ${currentProduct === 'courses' ? '' : '/ YEAR (exc. VAT)'}</strong></td><td><strong>£${total.toFixed(2)}</strong>${currentProduct !== 'courses' ? ' <span class="saving-tag">exc. VAT</span>' : ''}</td></tr>
+        </tbody>
+      </table>
+      <div class="q-section-title">What's Included</div>
+      <div class="q-includes">
+        ${includes.map(i => `<div class="q-inc-item"><span class="q-inc-check">✓</span>${i}</div>`).join('')}
+      </div>
+      <div class="q-validity">
+        📅 <strong>Quote validity:</strong> This quotation is valid until ${fmt2(validUntil)}. Pricing is subject to change after this date.
+      </div>
+      ${upfrontDisc > 0 ? '<div style="background:#FFEBEE;border:1px solid #C62828;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:#C62828;"><strong>⚠️ Paid Upfront Discount Applied ('+upfrontDisc+'%)</strong><br>This quote includes a '+upfrontDisc+'% discount in exchange for full upfront payment on signing. This discount has been manager-approved and is conditional on payment being received within 7 days of agreement.</div>' : ''}
+      <div class="q-cta">
+        <h3>Ready to get started?</h3>
+        <p>Contact your ecert account manager to accept this quote or arrange a demo · info@ecerttraining.co.uk · 020 3817 0891</p>
+      </div>
+    </div>
+    <div class="q-footer">
+      <div class="q-footer-left">ecert Training Ltd · ecerttraining.co.uk<br>All prices exclude VAT · Quote ref: ${refNum}</div>
+      <div class="q-footer-right">Valid until: ${fmt2(validUntil)}<br>Confidential — prepared for ${org}</div>
+    </div>`;
+
+  document.getElementById('quote-output').style.display = 'block';
+  document.getElementById('quote-output').scrollIntoView({ behavior: 'smooth' });
+}
+
+function savePDF() {
+  // Force browser into a state that defaults to Save as PDF
+  // We temporarily set the document title to become the PDF filename
+  const originalTitle = document.title;
+  const org = document.getElementById('org-name').value || 'ecert-proposal';
+  const ref = document.querySelector('.ref-num') ? document.querySelector('.ref-num').textContent : '';
+  document.title = 'ecert-Quote-' + org.replace(/[^a-zA-Z0-9]/g, '-') + (ref ? '-' + ref : '');
+  
+  // Use the print API but with CSS we force Save as PDF behaviour
+  // Modern browsers default to PDF when print-color-adjust is set
+  window.print();
+  
+  // Restore title after dialog opens
+  setTimeout(() => { document.title = originalTitle; }, 1000);
+}
+</script>
+</body>
+</html>
