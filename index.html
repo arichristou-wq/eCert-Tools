@@ -8,6 +8,7 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --navy: #0D1F3C; --dark-blue: #1565C0; --mid-blue: #1976D2; --light-blue: #E3F2FD;
+    --coral: #FF6B5B; --coral-dark: #E85A4A; --coral-light: #FFF0EE; --coral-mid: #FF9A6C; --coral-mid-light: #FFF3EC;
     --teal: #00695C; --light-teal: #E0F2F1; --amber: #F57C00; --amber-light: #FFF8E1;
     --purple: #6A1B9A; --purple-light: #F3E5F5;
     --grey: #F5F5F5; --mid-grey: #9E9E9E; --dark-grey: #424242;
@@ -16,7 +17,7 @@
   body { font-family: Arial, sans-serif; background: #F0F4F8; color: #1A2B38; min-height: 100vh; }
 
   /* ── HEADER ── */
-  .header { background: var(--navy); padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .header { background: var(--navy); padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--coral); }
   .header-logo { color: white; font-size: 22px; font-weight: bold; }
   .header-sub { color: #BBDEFB; font-size: 13px; }
 
@@ -33,19 +34,23 @@
   .form-group { margin-bottom: 16px; }
   label { display: block; font-size: 12px; font-weight: bold; color: var(--dark-grey); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.04em; }
   input, select { width: 100%; padding: 10px 12px; border: 1.5px solid #DDE3F0; border-radius: 6px; font-size: 14px; font-family: Arial, sans-serif; color: #1A2B38; background: white; transition: border-color 0.2s; }
-  input:focus, select:focus { outline: none; border-color: var(--dark-blue); }
+  input:focus, select:focus { outline: none; border-color: var(--coral); }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
   /* ── PRODUCT CARDS ── */
   .product-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px; }
   .product-card { border: 2px solid #DDE3F0; border-radius: 8px; padding: 10px; cursor: pointer; text-align: center; transition: all 0.2s; }
-  .product-card:hover { border-color: var(--dark-blue); }
-  .product-card.selected-core { border-color: var(--dark-blue); background: var(--light-blue); }
-  .product-card.selected-unlimited { border-color: var(--teal); background: var(--light-teal); }
-  .product-card.selected-courses { border-color: var(--purple); background: var(--purple-light); }
+  .product-card:hover { border-color: var(--coral); }
+  .product-card.selected-essentials { border-color: #FFCBB8; background: #FFF7F5; }
+  .product-card.selected-360 { border-color: var(--coral); background: var(--coral-light); }
+  .product-card.selected-flex { border-color: var(--coral-mid); background: var(--coral-mid-light); }
+  .product-card.selected-carecert { border-color: var(--teal); background: var(--light-teal); }
   .product-card .icon { font-size: 20px; margin-bottom: 4px; }
   .product-card .name { font-size: 11px; font-weight: bold; color: var(--dark-grey); }
   .product-card .price-from { font-size: 10px; color: var(--mid-grey); margin-top: 2px; }
+
+  /* ── PRODUCT CARDS — 4 up ── */
+  .product-cards-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px; }
 
   /* ── RESULTS ── */
   .result-box { background: var(--grey); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
@@ -68,7 +73,7 @@
   /* ── BUTTONS ── */
   .btn { display: block; width: 100%; padding: 12px; border: none; border-radius: 7px; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: opacity 0.2s; }
   .btn:hover { opacity: 0.88; }
-  .btn-quote { background: var(--dark-blue); color: white; }
+  .btn-quote { background: var(--coral); color: white; }
   .btn-print { background: var(--teal); color: white; }
 
   /* ── QUOTE OUTPUT ── */
@@ -76,7 +81,7 @@
 
   /* ── PRINTABLE QUOTE ── */
   .quote-doc { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
-  .q-header { background: var(--navy); padding: 28px 32px; display: flex; justify-content: space-between; align-items: flex-start; }
+  .q-header { background: var(--navy); padding: 28px 32px; display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid var(--coral); }
   .q-logo { color: white; font-size: 28px; font-weight: bold; }
   .q-logo-sub { color: #BBDEFB; font-size: 13px; margin-top: 3px; }
   .q-ref { text-align: right; color: #BBDEFB; font-size: 12px; }
@@ -88,11 +93,12 @@
   .q-customer-right { text-align: right; font-size: 12px; color: var(--dark-grey); }
 
   .q-body { padding: 24px 32px; }
-  .q-section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--mid-grey); margin-bottom: 12px; font-weight: bold; }
+  .q-section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--coral); margin-bottom: 12px; font-weight: bold; }
 
-  .q-product-bar { display: flex; align-items: center; gap: 14px; background: var(--light-blue); border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; }
-  .q-product-bar.teal { background: var(--light-teal); }
-  .q-product-bar.purple { background: var(--purple-light); }
+  .q-product-bar { display: flex; align-items: center; gap: 14px; background: var(--coral-light); border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; border-left: 4px solid var(--coral); }
+  .q-product-bar.c360 { background: var(--coral-light); border-left-color: var(--coral); }
+  .q-product-bar.flex { background: var(--coral-mid-light); border-left-color: var(--coral-mid); }
+  .q-product-bar.carecert { background: var(--light-teal); border-left-color: var(--teal); }
   .q-product-icon { font-size: 28px; }
   .q-product-name { font-size: 18px; font-weight: bold; color: var(--navy); }
   .q-product-desc { font-size: 12px; color: var(--dark-grey); margin-top: 2px; }
@@ -101,9 +107,10 @@
   .q-price-table th { background: var(--navy); color: white; padding: 10px 14px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
   .q-price-table td { padding: 10px 14px; border-bottom: 1px solid #EEE; }
   .q-price-table tr:last-child td { border-bottom: none; }
-  .q-price-table tr.total-row td { background: var(--light-blue); font-weight: bold; font-size: 15px; }
-  .q-price-table tr.total-row.teal td { background: var(--light-teal); }
-  .q-price-table tr.total-row.purple td { background: var(--purple-light); }
+  .q-price-table tr.total-row td { background: var(--coral-light); font-weight: bold; font-size: 15px; }
+  .q-price-table tr.total-row.c360 td { background: var(--coral-light); }
+  .q-price-table tr.total-row.flex td { background: var(--coral-mid-light); }
+  .q-price-table tr.total-row.carecert td { background: var(--light-teal); }
   .q-price-table .strike { text-decoration: line-through; color: var(--mid-grey); font-size: 12px; }
   .saving-tag { background: var(--green-light); color: var(--green); font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
 
@@ -111,15 +118,14 @@
   .q-inc-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--dark-grey); background: var(--grey); padding: 8px 10px; border-radius: 6px; }
   .q-inc-check { color: var(--teal); font-size: 14px; font-weight: bold; }
 
-  .q-footer { background: var(--navy); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
+  .q-footer { background: var(--navy); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; border-top: 3px solid var(--coral); }
   .q-footer-left { color: #BBDEFB; font-size: 11px; }
   .q-footer-right { color: #BBDEFB; font-size: 11px; text-align: right; }
   .q-validity { background: var(--amber-light); border: 1px solid var(--amber); border-radius: 6px; padding: 10px 14px; font-size: 12px; color: #5D3A00; margin-bottom: 20px; }
 
-  .q-cta { background: var(--dark-blue); color: white; border-radius: 8px; padding: 16px 20px; text-align: center; margin-bottom: 20px; }
+  .q-cta { background: var(--coral); color: white; border-radius: 8px; padding: 16px 20px; text-align: center; margin-bottom: 20px; }
   .q-cta h3 { font-size: 15px; margin-bottom: 4px; }
-  .q-cta p { font-size: 12px; color: #BBDEFB; }
-
+  .q-cta p { font-size: 12px; color: rgba(255,255,255,0.85); }
 
   /* ── UPFRONT DISCOUNT ── */
   .upfront-section { border: 2px dashed #C62828; border-radius: 8px; padding: 14px; margin-top: 20px; background: #FFF8F8; }
@@ -135,12 +141,28 @@
   .upfront-opt .lbl { font-size: 10px; color: var(--mid-grey); margin-top: 2px; }
   .upfront-result { background: #FFEBEE; border-radius: 6px; padding: 10px 12px; margin-top: 10px; font-size: 13px; color: #C62828; font-weight: bold; display: none; }
 
+  /* ── BACK-POCKET DISCOUNT BUTTONS ── */
+  .bp-opt { border: 2px solid #DDE3F0; border-radius: 6px; padding: 8px 4px; cursor: pointer; text-align: center; transition: all 0.2s; background: white; }
+  .bp-opt:hover { border-color: var(--coral); }
+  .bp-opt.selected { border-color: var(--coral); background: var(--coral-light); }
+  .bp-opt .bp-pct { font-size: 16px; font-weight: bold; color: var(--coral); }
+  .bp-opt .bp-lbl { font-size: 9px; color: var(--mid-grey); margin-top: 2px; }
+  .bp-opt[id="bp-15"].selected, .bp-opt[id="bp-20"].selected { border-color: var(--red); background: var(--red-light); }
+  .bp-opt[id="bp-15"].selected .bp-pct, .bp-opt[id="bp-20"].selected .bp-pct { color: var(--red); }
+
+  /* ── CARE CERT SECTION ── */
+  .carecert-section { background: var(--light-teal); border-radius: 8px; padding: 14px; margin-top: 16px; border-left: 4px solid var(--teal); }
+  .carecert-title { font-size: 13px; font-weight: bold; color: var(--teal); margin-bottom: 8px; }
+  .carecert-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .carecert-opt { border: 2px solid #B2DFDB; border-radius: 6px; padding: 10px; cursor: pointer; text-align: center; background: white; transition: all 0.2s; }
+  .carecert-opt:hover { border-color: var(--teal); }
+  .carecert-opt.selected { border-color: var(--teal); background: var(--light-teal); }
+  .carecert-opt .cc-price { font-size: 18px; font-weight: bold; color: var(--teal); }
+  .carecert-opt .cc-label { font-size: 10px; color: var(--mid-grey); margin-top: 2px; }
+
   .no-print { }
   @media print {
-    @page { 
-      margin: 10mm; 
-      size: A4;
-    }
+    @page { margin: 10mm; size: A4; }
     body { background: white; }
     .container { display: block; padding: 0; max-width: 100%; }
     .no-print { display: none !important; }
@@ -172,7 +194,7 @@
 
   <!-- ── CALCULATOR PANEL ── -->
   <div class="panel no-print">
-    <div class="panel-header" style="background:var(--dark-blue);">📋  Build Your Quote</div>
+    <div class="panel-header" style="background:var(--coral);">📋  Build Your Quote</div>
     <div class="panel-body">
 
       <!-- Customer Details -->
@@ -191,36 +213,41 @@
         </div>
       </div>
 
-      <!-- Product Selection -->
+      <!-- Product Selection — 4 products -->
       <div class="form-group">
         <label>Product</label>
-        <div class="product-cards">
-          <div class="product-card" id="card-core" onclick="selectProduct('core')">
+        <div class="product-cards-4">
+          <div class="product-card" id="card-essentials" onclick="selectProduct('essentials')">
             <div class="icon">📘</div>
-            <div class="name">Core Compliance</div>
-            <div class="price-from">From £25/learner/yr</div>
+            <div class="name">Compliance Essentials</div>
+            <div class="price-from">From £26/user/yr</div>
           </div>
-          <div class="product-card" id="card-unlimited" onclick="selectProduct('unlimited')">
+          <div class="product-card" id="card-360" onclick="selectProduct('360')">
             <div class="icon">🚀</div>
-            <div class="name">Compliance Unlimited</div>
-            <div class="price-from">From £45/learner/yr</div>
+            <div class="name">Compliance 360</div>
+            <div class="price-from">From £38/user/yr</div>
           </div>
-          <div class="product-card" id="card-courses" onclick="selectProduct('courses')">
+          <div class="product-card" id="card-flex" onclick="selectProduct('flex')">
+            <div class="icon">⚡</div>
+            <div class="name">Flex Credits</div>
+            <div class="price-from">From £4.00/credit</div>
+          </div>
+          <div class="product-card" id="card-carecert" onclick="selectProduct('carecert')">
             <div class="icon">🎓</div>
-            <div class="name">Courses</div>
-            <div class="price-from">From £29/course</div>
+            <div class="name">Care Certificate</div>
+            <div class="price-from">From £10/credit</div>
           </div>
         </div>
       </div>
 
-      <!-- Learner Count -->
+      <!-- Learner / User Count -->
       <div class="form-group">
-        <label>Number of Learners / Staff</label>
+        <label id="learner-label">Number of Learners / Staff</label>
         <input type="number" id="learner-count" placeholder="e.g. 70" min="1" oninput="recalc()">
-        <div id="band-display" style="font-size:12px;color:var(--dark-blue);margin-top:4px;font-weight:bold;"></div>
+        <div id="band-display" style="font-size:12px;color:var(--coral);margin-top:4px;font-weight:bold;"></div>
       </div>
 
-      <!-- Contract Year (subscriptions only) -->
+      <!-- Contract Year (subscription products only) -->
       <div class="form-group" id="year-group">
         <label>Contract Year</label>
         <select id="contract-year" onchange="recalc()">
@@ -231,38 +258,73 @@
         </select>
       </div>
 
-      <!-- Number of Courses (courses product only) -->
-      <div class="form-group" id="courses-group" style="display:none;">
-        <label>Number of Courses</label>
-        <select id="num-courses" onchange="recalc()">
-          <option value="1">1 course</option>
-          <option value="2">2 courses</option>
-          <option value="3">3 courses (−10% discount)</option>
-          <option value="4">4 courses (−10% discount)</option>
-          <option value="5">5 courses (−15% discount)</option>
+      <!-- Flex Credits pack selector -->
+      <div class="form-group" id="flex-group" style="display:none;">
+        <label>Credit Pack Size</label>
+        <select id="flex-pack" onchange="recalc()">
+          <option value="1-50">1 – 50 credits  (£4.00/credit) — £200 total</option>
+          <option value="51-150">51 – 150 credits  (£2.99/credit) — £399 total</option>
+          <option value="151-300">151 – 300 credits  (£2.49/credit) — £599 total</option>
+          <option value="301-500">301 – 500 credits  (£1.99/credit) — £895 total</option>
+          <option value="501+">501+ credits  (£1.29/credit) — best rate</option>
         </select>
+        <div id="flex-qty-group" style="margin-top:10px;">
+          <label>Number of Credits</label>
+          <input type="number" id="flex-qty" placeholder="e.g. 100" min="1" oninput="recalc()">
+        </div>
       </div>
 
-      <!-- Back pocket discount -->
+      <!-- Care Cert credit selector -->
+      <div class="form-group" id="carecert-group" style="display:none;">
+        <label>Number of Care Certificate Credits</label>
+        <input type="number" id="cc-qty" placeholder="e.g. 10" min="1" oninput="recalc()">
+        <div style="font-size:11px;color:var(--mid-grey);margin-top:6px;">1 credit = 1 full Care Certificate for 1 learner · Credits never expire</div>
+        <div id="cc-rate-display" style="font-size:12px;color:var(--teal);margin-top:4px;font-weight:bold;"></div>
+      </div>
+
+      <!-- Back-pocket discount — click to select, no free type -->
       <div class="form-group">
-        <label>Agent Back-Pocket Discount (%)</label>
-        <input type="number" id="bp-discount" placeholder="0 — use to close only" min="0" max="20" value="0" oninput="recalc()">
+        <label>Agent Back-Pocket Discount</label>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:6px;">
+          <div class="bp-opt selected" id="bp-0" onclick="selectBP(0)">
+            <div class="bp-pct">0%</div>
+            <div class="bp-lbl">No disc.</div>
+          </div>
+          <div class="bp-opt" id="bp-5" onclick="selectBP(5)">
+            <div class="bp-pct">5%</div>
+            <div class="bp-lbl">EoQ push</div>
+          </div>
+          <div class="bp-opt" id="bp-10" onclick="selectBP(10)">
+            <div class="bp-pct">10%</div>
+            <div class="bp-lbl">Competitor</div>
+          </div>
+          <div class="bp-opt" id="bp-15" onclick="selectBP(15)">
+            <div class="bp-pct">15%</div>
+            <div class="bp-lbl">Multi-year</div>
+          </div>
+          <div class="bp-opt" id="bp-20" onclick="selectBP(20)">
+            <div class="bp-pct">20%</div>
+            <div class="bp-lbl">Max — floor</div>
+          </div>
+        </div>
+        <!-- Hidden input still used by recalc() logic -->
+        <input type="hidden" id="bp-discount" value="0">
         <div id="floor-warning" class="floor-warning">⚠️ Below absolute price floor — escalate to Ari</div>
+        <div id="mgr-warning" style="display:none;background:#FFF8E1;color:#F57C00;font-size:11px;padding:6px 10px;border-radius:6px;margin-top:6px;">⚠️ Above 10% — manager approval required before offering</div>
       </div>
 
-
-      <!-- Paid Upfront Discount — Special Circumstances Only -->
+      <!-- Paid Upfront Discount -->
       <div class="upfront-section">
         <div class="upfront-header">
           <span class="upfront-badge">⚠️ Special Circumstances Only</span>
           <span class="upfront-title">Paid Upfront Discount</span>
         </div>
         <div class="upfront-warning">
-          🔒 This section is for use only when a prospect commits to paying the full deal value upfront in one payment. Requires manager sign-off before offering. Do not use as a standard closing tool.
+          🔒 For use only when a prospect commits to paying the full deal value upfront in one payment. Requires manager sign-off before offering. Do not use as a standard closing tool.
         </div>
         <label style="font-size:11px;font-weight:bold;color:var(--red);text-transform:uppercase;letter-spacing:0.04em;display:block;margin-bottom:8px;">Select Upfront Discount Level</label>
         <div class="upfront-options">
-          <div class="upfront-opt" id="upfront-0" onclick="selectUpfront(0)">
+          <div class="upfront-opt selected" id="upfront-0" onclick="selectUpfront(0)">
             <div class="pct">None</div>
             <div class="lbl">No upfront disc.</div>
           </div>
@@ -302,9 +364,7 @@
 
   <!-- ── QUOTE OUTPUT ── -->
   <div id="quote-output">
-    <div class="quote-doc" id="quote-doc">
-      <!-- filled by JS -->
-    </div>
+    <div class="quote-doc" id="quote-doc"></div>
     <div class="no-print" style="text-align:center;margin-top:16px;">
       <button class="btn btn-print" style="max-width:320px;margin:0 auto;" onclick="savePDF()">💾  Save Quote as PDF</button>
       <p style="font-size:11px;color:var(--mid-grey);margin-top:8px;font-style:italic;">Saves a clean customer-facing PDF — calculator not included</p>
@@ -314,55 +374,63 @@
 </div>
 
 <script>
-// ── PRICING DATA ──────────────────────────────────────────────────
-const BANDS = [
-  { label: "1 – 10 staff", min: 1, max: 10 },
-  { label: "5 – 15 learners", min: 5, max: 15 },
-  { label: "16 – 30 learners", min: 16, max: 30 },
-  { label: "31 – 60 learners", min: 31, max: 60 },
-  { label: "61 – 100 learners", min: 61, max: 100 },
-  { label: "101 – 200 learners", min: 101, max: 200 },
-  { label: "201+", min: 201, max: 99999 },
+// ── PRICING DATA ──────────────────────────────────────────────────────────────
+
+// Subscription bands (Essentials & 360)
+// Band index: 1=1-24, 2=25-74, 3=75-149, 4=150+
+const SUB_BANDS = [
+  { label: "1 – 24 users",   min: 1,   max: 24  },
+  { label: "25 – 74 users",  min: 25,  max: 74  },
+  { label: "75 – 149 users", min: 75,  max: 149 },
+  { label: "150+ users",     min: 150, max: 99999 },
 ];
 
-const BAND_DISC = [0, 0, 0.08, 0.1568, 0.2202, 0.2826, null];
+// Year 1 base prices per band
+const ESS_Y1  = [26, 24, 22, 20];   // Compliance Essentials
+const C360_Y1 = [38, 35, 32, 30];   // Compliance 360
+
+// Multi-year discounts
 const YEAR_DISC = [0, 0, 0.125, 0.175, 0.25];
 
-// Core Compliance base price Y1 = £25, Unlimited base Y1 = £45
-function subPrice(base, bandIdx, yearDisc) {
-  const bd = BAND_DISC[bandIdx];
-  if (bd === null) return null;
-  return +(base * (1 - bd) * (1 - yearDisc)).toFixed(2);
+// Flex Credit packs
+const FLEX_PACKS = {
+  "1-50":    { total: 200,  cpc: 4.00,  label: "1–50 credits"    },
+  "51-150":  { total: 399,  cpc: 2.99,  label: "51–150 credits"  },
+  "151-300": { total: 599,  cpc: 2.49,  label: "151–300 credits" },
+  "301-500": { total: 895,  cpc: 1.99,  label: "301–500 credits" },
+  "501+":    { total: null, cpc: 1.29,  label: "501+ credits"    },
+};
+
+// Care Certificate credits
+// Under 50 = £15/credit, 50+ = £10/credit
+function getCCRate(qty) {
+  return qty >= 50 ? 10 : 15;
 }
 
-// Course prices per band (1-10 = £29, 11-20=£49, 21-50=£89, 51-100=£149, 101-200=£249, 201+=contact)
-const COURSE_PRICES = [29, 49, 89, 149, 249, null];
-
-function getBandIdx(learners, product) {
-  if (product === 'courses') {
-    if (learners <= 10) return 0;
-    if (learners <= 20) return 1;
-    if (learners <= 50) return 2;
-    if (learners <= 100) return 3;
-    if (learners <= 200) return 4;
-    return 5;
-  } else {
-    if (learners < 5) return -1;
-    if (learners <= 15) return 1;
-    if (learners <= 30) return 2;
-    if (learners <= 60) return 3;
-    if (learners <= 100) return 4;
-    if (learners <= 200) return 5;
-    return 6;
-  }
-}
-
-// Floors
-const FLOORS = { core: 13.43, unlimited: 24.18, courses: 29 };
+// Absolute price floors (per learner/year after all discounts)
+const FLOORS = { essentials: 15, "360": 22, flex: 1.29, carecert: 10 };
 
 let currentProduct = null;
-
 let currentUpfront = 0;
+let currentBP = 0;
+
+function selectBP(pct) {
+  currentBP = pct;
+  [0,5,10,15,20].forEach(p => {
+    const el = document.getElementById('bp-' + p);
+    if (el) el.className = 'bp-opt' + (p === pct ? ' selected' : '');
+  });
+  document.getElementById('bp-discount').value = pct;
+  recalc();
+}
+
+function getSubBandIdx(users) {
+  if (users < 1) return -1;
+  for (let i = 0; i < SUB_BANDS.length; i++) {
+    if (users >= SUB_BANDS[i].min && users <= SUB_BANDS[i].max) return i;
+  }
+  return -1;
+}
 
 function selectUpfront(pct) {
   currentUpfront = pct;
@@ -370,242 +438,351 @@ function selectUpfront(pct) {
     const el = document.getElementById('upfront-' + p);
     if (el) el.className = 'upfront-opt' + (p === pct ? ' selected' : '');
   });
+
+  // Auto-populate agent back-pocket discount based on upfront level
+  // Upfront 10% → BP 5%, 15% → BP 10%, 20% → BP 15%, 30% → BP 20%, None → reset BP to 0
+  const bpMap = { 0: 0, 10: 5, 15: 10, 20: 15, 30: 20 };
+  const autoBP = bpMap[pct];
+  if (pct > 0) {
+    selectBP(autoBP);
+    // Show a note that BP was auto-set
+    const mgrEl = document.getElementById('mgr-warning');
+    if (mgrEl && autoBP > 10) {
+      mgrEl.style.display = 'block';
+      mgrEl.textContent = '⚠️ Back-pocket discount auto-set to ' + autoBP + '% based on upfront level — manager approval required';
+    }
+  } else {
+    selectBP(0);
+  }
+
   recalc();
 }
 
-
 function selectProduct(p) {
   currentProduct = p;
-  ['core','unlimited','courses'].forEach(x => {
-    document.getElementById('card-' + x).className = 'product-card';
+  ['essentials','360','flex','carecert'].forEach(x => {
+    const el = document.getElementById('card-' + x);
+    if (el) el.className = 'product-card';
   });
   document.getElementById('card-' + p).className = 'product-card selected-' + p;
-  document.getElementById('year-group').style.display = (p === 'courses') ? 'none' : 'block';
-  document.getElementById('courses-group').style.display = (p === 'courses') ? 'block' : 'none';
+
+  // Show/hide relevant form sections
+  document.getElementById('year-group').style.display    = (p === 'essentials' || p === '360') ? 'block' : 'none';
+  document.getElementById('flex-group').style.display    = (p === 'flex')      ? 'block' : 'none';
+  document.getElementById('carecert-group').style.display= (p === 'carecert') ? 'block' : 'none';
+
+  // Update learner label
+  document.getElementById('learner-label').textContent =
+    p === 'flex' ? 'Number of Learners / Staff (for reference)' :
+    p === 'carecert' ? 'Number of Learners / Staff (for reference)' :
+    'Number of Users / Staff';
+
   recalc();
 }
 
 function fmt(n) { return '£' + n.toFixed(2); }
 
 function recalc() {
-  const learners = parseInt(document.getElementById('learner-count').value) || 0;
-  const bpDisc = parseFloat(document.getElementById('bp-discount').value) || 0;
-  const yearVal = parseInt(document.getElementById('contract-year').value) || 1;
-  const numCourses = parseInt(document.getElementById('num-courses').value) || 1;
+  const users    = parseInt(document.getElementById('learner-count').value) || 0;
+  const bpDisc   = Math.min(parseFloat(document.getElementById('bp-discount').value) || 0, 20);
+  const yearVal  = parseInt(document.getElementById('contract-year').value) || 1;
+  const flexPack = document.getElementById('flex-pack') ? document.getElementById('flex-pack').value : '1-50';
+  const flexQty  = parseInt(document.getElementById('flex-qty') ? document.getElementById('flex-qty').value : 0) || 0;
+  const ccQty    = parseInt(document.getElementById('cc-qty') ? document.getElementById('cc-qty').value : 0) || 0;
 
   document.getElementById('floor-warning').style.display = 'none';
+  if (bpDisc > 10 && currentUpfront === 0) {
+    document.getElementById('mgr-warning').style.display = 'block';
+    document.getElementById('mgr-warning').textContent   = '⚠️ Above 10% — manager approval required before offering';
+  } else if (bpDisc <= 10) {
+    document.getElementById('mgr-warning').style.display = 'none';
+  }
 
-  if (!currentProduct || learners < 1) {
-    document.getElementById('result-area').innerHTML = '<div style="color:var(--mid-grey);font-size:14px;padding:20px 0;text-align:center;">Select a product and enter learner count →</div>';
-    document.getElementById('band-display').textContent = '';
+  if (!currentProduct) {
+    document.getElementById('result-area').innerHTML = '<div style="color:var(--mid-grey);font-size:14px;padding:20px 0;text-align:center;">Select a product and enter details →</div>';
     return;
   }
 
-  const bandIdx = getBandIdx(learners, currentProduct);
-
-  if (currentProduct !== 'courses' && bandIdx === -1) {
-    document.getElementById('band-display').textContent = '⚠️ Minimum 5 learners for subscription plans';
-    document.getElementById('result-area').innerHTML = '<div style="color:var(--red);font-size:13px;">Minimum 5 learners for Core Compliance and Compliance Unlimited.</div>';
-    return;
-  }
-
-  if (bandIdx === 6 || (currentProduct === 'courses' && bandIdx === 5)) {
-    document.getElementById('band-display').textContent = '201+ — bespoke pricing, contact Ari';
-    document.getElementById('result-area').innerHTML = '<div style="color:var(--amber);font-size:13px;font-weight:bold;">201+ learners — bespoke pricing required.<br>Contact Ari to build this quote.</div>';
-    return;
-  }
-
-  let basePerLearner, yearDiscRate, totalBeforeBP, pricePerLearnerFinal, totalAnnual;
-  let courseMultiDisc = 0;
   let html = '';
 
-  if (currentProduct === 'courses') {
-    const bandLabel = BANDS[bandIdx === 0 ? 0 : bandIdx].label;
-    document.getElementById('band-display').textContent = '✓ Band: ' + (bandIdx === 0 ? '1–10 staff' : bandIdx === 1 ? '11–20 staff' : bandIdx === 2 ? '21–50 staff' : bandIdx === 3 ? '51–100 staff' : '101–200 staff');
-
-    const pricePerCourse = COURSE_PRICES[bandIdx];
-    if (numCourses >= 5) courseMultiDisc = 0.15;
-    else if (numCourses >= 3) courseMultiDisc = 0.10;
-    const subtotal = pricePerCourse * numCourses;
-    const discAmt = subtotal * courseMultiDisc;
-    totalBeforeBP = subtotal - discAmt;
-    const bpDiscAmt = totalBeforeBP * (bpDisc / 100);
-    const finalTotal = totalBeforeBP - bpDiscAmt;
-    const floor = FLOORS.courses;
-
-    if (bpDisc > 20 || currentUpfront > 30 || (numCourses === 1 && finalTotal < floor)) {
-      document.getElementById('floor-warning').style.display = 'block';
+  // ── COMPLIANCE ESSENTIALS & 360 ──────────────────────────────────────────
+  if (currentProduct === 'essentials' || currentProduct === '360') {
+    if (users < 1) {
+      document.getElementById('result-area').innerHTML = '<div style="color:var(--mid-grey);font-size:14px;padding:20px 0;text-align:center;">Enter number of users →</div>';
+      document.getElementById('band-display').textContent = '';
+      return;
+    }
+    const bandIdx = getSubBandIdx(users);
+    if (bandIdx === -1) {
+      document.getElementById('band-display').textContent = '⚠️ Enter a valid user count';
+      document.getElementById('result-area').innerHTML = '<div style="color:var(--red);font-size:13px;">Please enter a valid number of users.</div>';
+      return;
     }
 
-    html = `
-      <div class="result-box" style="background:var(--purple-light);">
-        <div class="result-label">Total Quote</div>
-        <div class="result-value" style="color:var(--purple);">${fmt(finalTotal)}</div>
-        <div class="result-sub">${numCourses} course${numCourses>1?'s':''} · ${learners} staff · 90-day access</div>
-      </div>
-      <div class="result-grid">
-        <div class="result-small">
-          <div class="rl">Price per course</div>
-          <div class="rv">${fmt(pricePerCourse)}</div>
-        </div>
-        <div class="result-small">
-          <div class="rl">Cost per staff member</div>
-          <div class="rv">${fmt(finalTotal / learners)}</div>
-        </div>
-        <div class="result-small">
-          <div class="rl">Multi-course discount</div>
-          <div class="rv">${courseMultiDisc > 0 ? '-' + (courseMultiDisc*100) + '%' : 'None'}</div>
-        </div>
-        <div class="result-small">
-          <div class="rl">Agent discount</div>
-          <div class="rv">${bpDisc > 0 ? '-' + bpDisc + '%' : 'None'}</div>
-        </div>
-      </div>
-      <div style="font-size:12px;color:var(--dark-grey);padding:10px;background:var(--grey);border-radius:6px;">
-        <strong>Upgrade prompt:</strong> After 2+ course purchases, flag Core Compliance — 15 courses all year from ${fmt(subPrice(25, bandIdx, 0) * learners)}/yr
-      </div>`;
-  } else {
-    const base = currentProduct === 'core' ? 25 : 45;
-    const yearDisc = YEAR_DISC[yearVal];
-    const pricePerLearner = subPrice(base, bandIdx, yearDisc);
-    const bpDiscAmt = pricePerLearner * (bpDisc / 100);
-    const finalPPL = +(pricePerLearner - bpDiscAmt).toFixed(2);
-    const totalAnn = +(finalPPL * learners).toFixed(2);
-    const floor = currentProduct === 'core' ? FLOORS.core : FLOORS.unlimited;
-    const colour = currentProduct === 'core' ? 'var(--dark-blue)' : 'var(--teal)';
-    const lightBg = currentProduct === 'core' ? 'var(--light-blue)' : 'var(--light-teal)';
+    document.getElementById('band-display').textContent = '✓ Band: ' + SUB_BANDS[bandIdx].label;
 
-    const bandBands = ['','5–15','16–30','31–60','61–100','101–200'];
-    document.getElementById('band-display').textContent = '✓ Band: ' + (bandBands[bandIdx] || '') + ' learners';
+    const baseArr  = currentProduct === 'essentials' ? ESS_Y1 : C360_Y1;
+    const y1PPL    = baseArr[bandIdx];
+    const yearDisc = YEAR_DISC[yearVal];
+    const afterYear= +(y1PPL * (1 - yearDisc)).toFixed(2);
+    const bpAmt    = +(afterYear * bpDisc / 100).toFixed(2);
+    const finalPPL = +(afterYear - bpAmt).toFixed(2);
+    const totalAnn = +(finalPPL * users).toFixed(2);
+    const floor    = FLOORS[currentProduct];
+    const colour   = currentProduct === 'essentials' ? '#FFCBB8' : 'var(--coral)';
+    const textCol  = currentProduct === 'essentials' ? 'var(--navy)' : 'var(--coral)';
+    const bgCol    = currentProduct === 'essentials' ? '#FFF7F5' : 'var(--coral-light)';
 
     if (finalPPL < floor) document.getElementById('floor-warning').style.display = 'block';
-    if (bpDisc > 20) document.getElementById('floor-warning').style.display = 'block';
+    if (bpDisc > 20)      document.getElementById('floor-warning').style.display = 'block';
 
-    const y1PPL = subPrice(base, bandIdx, 0);
-    const saving = yearVal > 1 ? fmt((y1PPL - finalPPL) * learners) : null;
+    const y1Total  = +(y1PPL * users).toFixed(2);
+    const savingAmt= yearVal > 1 ? fmt(y1Total - totalAnn) : null;
+
+    // Upfront calc
+    const upfrontAmt = currentUpfront > 0 ? +(totalAnn * currentUpfront / 100).toFixed(2) : 0;
+    const finalTotal = +(totalAnn - upfrontAmt).toFixed(2);
+
+    // Tip: show Year 3 saving
+    const y3PPL    = +(y1PPL * (1 - 0.175)).toFixed(2);
+    const y3Total  = +(y3PPL * users).toFixed(2);
+    const y3Saving = fmt(y1Total - y3Total);
 
     html = `
-      <div class="result-box" style="background:${lightBg};">
+      <div class="result-box" style="background:${bgCol};">
         <div class="result-label">Annual Total</div>
-        <div class="result-value" style="color:${colour};">${fmt(totalAnn)}</div>
-        <div class="result-sub">${learners} learners · Year ${yearVal} rate${yearVal>1?' · '+saving+' saving vs Year 1':''}</div>
+        <div class="result-value" style="color:${textCol};">${fmt(finalTotal)}</div>
+        <div class="result-sub">${users} users · Year ${yearVal} rate${savingAmt ? ' · ' + savingAmt + ' saving vs Year 1' : ''}${currentUpfront > 0 ? ' · ' + currentUpfront + '% upfront disc.' : ''}</div>
       </div>
       <div class="result-grid">
-        <div class="result-small">
-          <div class="rl">Per learner / year</div>
-          <div class="rv">${fmt(finalPPL)}</div>
-        </div>
-        <div class="result-small">
-          <div class="rl">Per learner / month</div>
-          <div class="rv">${fmt(finalPPL/12)}</div>
-        </div>
-        <div class="result-small">
-          <div class="rl">Year discount</div>
-          <div class="rv">${yearDisc > 0 ? '-' + (yearDisc*100) + '%' : 'None'}</div>
-        </div>
-        <div class="result-small">
-          <div class="rl">Agent discount</div>
-          <div class="rv">${bpDisc > 0 ? '-' + bpDisc + '%' : 'None'}</div>
-        </div>
+        <div class="result-small"><div class="rl">Per user / year</div><div class="rv">${fmt(finalPPL)}</div></div>
+        <div class="result-small"><div class="rl">Per user / month</div><div class="rv">${fmt(finalPPL/12)}</div></div>
+        <div class="result-small"><div class="rl">Per user / week</div><div class="rv">${fmt(finalPPL/52)}</div></div>
+        <div class="result-small"><div class="rl">Year discount</div><div class="rv">${yearDisc > 0 ? '-' + (yearDisc*100) + '%' : 'None'}</div></div>
       </div>
-      ${yearVal === 1 && currentProduct === 'core' ? '<div style="font-size:12px;color:var(--dark-blue);padding:10px;background:var(--light-blue);border-radius:6px;"><strong>💡 Tip:</strong> Show Year 3 rate of '+fmt(subPrice(25,bandIdx,0.175)*learners)+' to demonstrate '+fmt((subPrice(25,bandIdx,0)-subPrice(25,bandIdx,0.175))*learners)+' saving — pushes multi-year commitment.</div>' : ''}
-      ${yearVal === 1 && currentProduct === 'unlimited' ? '<div style="font-size:12px;color:var(--teal);padding:10px;background:var(--light-teal);border-radius:6px;"><strong>💡 Tip:</strong> Show Year 3 rate of '+fmt(subPrice(45,bandIdx,0.175)*learners)+' to demonstrate '+fmt((subPrice(45,bandIdx,0)-subPrice(45,bandIdx,0.175))*learners)+' saving — pushes multi-year commitment.</div>' : ''}`;
+      ${yearVal === 1 ? `<div style="font-size:12px;color:${textCol};padding:10px;background:${bgCol};border-radius:6px;border-left:3px solid ${colour};">
+        <strong>💡 Tip:</strong> Show Year 3 rate of ${fmt(y3PPL)}/user/yr — total ${fmt(y3Total)} — saving ${y3Saving} vs Year 1. Pushes multi-year commitment.
+      </div>` : ''}
+      ${currentUpfront > 0 ? `<div style="margin-top:8px;font-size:12px;color:var(--red);background:var(--red-light);padding:8px 10px;border-radius:6px;">⚠️ Upfront discount of ${currentUpfront}% applied — manager sign-off required</div>` : ''}`;
   }
 
-  // Upfront discount result
+  // ── FLEX CREDITS ─────────────────────────────────────────────────────────
+  else if (currentProduct === 'flex') {
+    const pack = FLEX_PACKS[flexPack];
+    if (!pack) return;
+
+    let totalCost, cpcFinal, qty;
+    if (flexPack === '501+') {
+      qty = flexQty || 501;
+      cpcFinal = +(pack.cpc * (1 - bpDisc/100)).toFixed(2);
+      totalCost = +(cpcFinal * qty).toFixed(2);
+    } else {
+      qty = flexQty || 1;
+      cpcFinal = +(pack.cpc * (1 - bpDisc/100)).toFixed(2);
+      totalCost = +(cpcFinal * qty).toFixed(2);
+    }
+
+    const upfrontAmt = currentUpfront > 0 ? +(totalCost * currentUpfront / 100).toFixed(2) : 0;
+    const finalTotal = +(totalCost - upfrontAmt).toFixed(2);
+
+    document.getElementById('band-display').textContent = '✓ Pack: ' + pack.label + ' · £' + pack.cpc.toFixed(2) + '/credit';
+
+    html = `
+      <div class="result-box" style="background:var(--coral-mid-light);">
+        <div class="result-label">Total Quote</div>
+        <div class="result-value" style="color:var(--coral-mid);">${fmt(finalTotal)}</div>
+        <div class="result-sub">${pack.label} · ${fmt(cpcFinal)}/credit after discounts${currentUpfront > 0 ? ' · ' + currentUpfront + '% upfront disc.' : ''}</div>
+      </div>
+      <div class="result-grid">
+        <div class="result-small"><div class="rl">Cost per credit</div><div class="rv">${fmt(pack.cpc)}</div></div>
+        <div class="result-small"><div class="rl">After agent disc.</div><div class="rv">${fmt(cpcFinal)}</div></div>
+        <div class="result-small"><div class="rl">Agent discount</div><div class="rv">${bpDisc > 0 ? '-' + bpDisc + '%' : 'None'}</div></div>
+        <div class="result-small"><div class="rl">Credits never expire</div><div class="rv">✓</div></div>
+      </div>
+      <div style="font-size:12px;color:var(--teal);padding:10px;background:var(--light-teal);border-radius:6px;border-left:3px solid var(--teal);">
+        <strong>💡 Upgrade tip:</strong> After 2+ Flex Credit purchases, flag Compliance Essentials — from £26/user/yr covers all mandatory courses for the whole team.
+      </div>
+      ${currentUpfront > 0 ? `<div style="margin-top:8px;font-size:12px;color:var(--red);background:var(--red-light);padding:8px 10px;border-radius:6px;">⚠️ Upfront discount of ${currentUpfront}% applied — manager sign-off required</div>` : ''}`;
+  }
+
+  // ── CARE CERTIFICATE CREDITS ──────────────────────────────────────────────
+  else if (currentProduct === 'carecert') {
+    if (ccQty < 1) {
+      document.getElementById('result-area').innerHTML = '<div style="color:var(--mid-grey);font-size:14px;padding:20px 0;text-align:center;">Enter number of Care Cert credits →</div>';
+      document.getElementById('cc-rate-display').textContent = '';
+      return;
+    }
+
+    const rate     = getCCRate(ccQty);
+    const subtotal = +(rate * ccQty).toFixed(2);
+    const bpAmt    = +(subtotal * bpDisc / 100).toFixed(2);
+    const afterBP  = +(subtotal - bpAmt).toFixed(2);
+    const upfrontAmt = currentUpfront > 0 ? +(afterBP * currentUpfront / 100).toFixed(2) : 0;
+    const finalTotal = +(afterBP - upfrontAmt).toFixed(2);
+
+    document.getElementById('cc-rate-display').textContent =
+      ccQty >= 50 ? '✓ Bulk rate applied — £10/credit (50+ credits)' : '1–49 credits — £15/credit (bulk rate kicks in at 50+)';
+    document.getElementById('band-display').textContent = '';
+
+    html = `
+      <div class="result-box" style="background:var(--light-teal);">
+        <div class="result-label">Total Quote</div>
+        <div class="result-value" style="color:var(--teal);">${fmt(finalTotal)}</div>
+        <div class="result-sub">${ccQty} Care Certificate credit${ccQty>1?'s':''} · £${rate}.00/credit${currentUpfront > 0 ? ' · ' + currentUpfront + '% upfront disc.' : ''}</div>
+      </div>
+      <div class="result-grid">
+        <div class="result-small"><div class="rl">Rate per credit</div><div class="rv">£${rate}.00</div></div>
+        <div class="result-small"><div class="rl">Credits</div><div class="rv">${ccQty}</div></div>
+        <div class="result-small"><div class="rl">Agent discount</div><div class="rv">${bpDisc > 0 ? '-' + bpDisc + '%' : 'None'}</div></div>
+        <div class="result-small"><div class="rl">Credits never expire</div><div class="rv">✓</div></div>
+      </div>
+      ${ccQty < 50 ? `<div style="font-size:12px;color:var(--teal);padding:10px;background:var(--light-teal);border-radius:6px;border-left:3px solid var(--teal);">
+        💡 <strong>Bulk saving:</strong> Buy ${50 - ccQty} more credits to reach 50 and save £${((15 - 10) * ccQty).toFixed(2)} total at the £10 bulk rate.
+      </div>` : '<div style="font-size:12px;color:var(--teal);padding:10px;background:var(--light-teal);border-radius:6px;"><strong>✓ Bulk rate applied</strong> — £10/credit. Saving £' + ((15-10)*ccQty).toFixed(2) + ' vs single rate.</div>'}
+      ${currentUpfront > 0 ? `<div style="margin-top:8px;font-size:12px;color:var(--red);background:var(--red-light);padding:8px 10px;border-radius:6px;">⚠️ Upfront discount of ${currentUpfront}% applied — manager sign-off required</div>` : ''}`;
+  }
+
+  // Upfront result banner
   const upfrontEl = document.getElementById('upfront-result');
-  if (currentUpfront > 0 && (currentProduct === 'core' || currentProduct === 'unlimited')) {
-    const baseTotal = parseFloat(document.querySelector('.result-value') ? 0 : 0);
+  if (currentUpfront > 0) {
     upfrontEl.style.display = 'block';
-    upfrontEl.innerHTML = '⚠️ Paid upfront discount (' + currentUpfront + '%) active — will be applied to final quote total';
-  } else if (currentUpfront > 0 && currentProduct === 'courses') {
-    upfrontEl.style.display = 'block';
-    upfrontEl.innerHTML = '⚠️ Paid upfront discount (' + currentUpfront + '%) active — will be applied to final quote total';
+    upfrontEl.innerHTML = '⚠️ Paid upfront discount (' + currentUpfront + '%) active — applied to final quote total. Manager sign-off required.';
   } else {
     upfrontEl.style.display = 'none';
   }
+
   document.getElementById('result-area').innerHTML = html;
 }
 
+// ── GENERATE QUOTE ────────────────────────────────────────────────────────────
 function generateQuote() {
-  const org = document.getElementById('org-name').value || 'Care Organisation';
-  const contact = document.getElementById('contact-name').value || '';
-  const email = document.getElementById('contact-email').value || '';
-  const learners = parseInt(document.getElementById('learner-count').value) || 0;
-  const bpDisc = parseFloat(document.getElementById('bp-discount').value) || 0;
-  const yearVal = parseInt(document.getElementById('contract-year').value) || 1;
-  const numCourses = parseInt(document.getElementById('num-courses').value) || 1;
+  const org      = document.getElementById('org-name').value || 'Care Organisation';
+  const contact  = document.getElementById('contact-name').value || '';
+  const email    = document.getElementById('contact-email').value || '';
+  const users    = parseInt(document.getElementById('learner-count').value) || 0;
+  const bpDisc   = Math.min(parseFloat(document.getElementById('bp-discount').value) || 0, 20);
+  const yearVal  = parseInt(document.getElementById('contract-year').value) || 1;
+  const flexPack = document.getElementById('flex-pack').value;
+  const flexQty  = parseInt(document.getElementById('flex-qty').value) || 0;
+  const ccQty    = parseInt(document.getElementById('cc-qty').value) || 0;
 
-  if (!currentProduct || learners < 1) {
-    alert('Please select a product and enter learner count first.');
-    return;
-  }
+  if (!currentProduct) { alert('Please select a product first.'); return; }
 
-  // Apply upfront discount to total
   const upfrontDisc = currentUpfront;
-  
   const refNum = 'ECT-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random()*9000)+1000);
   const today = new Date();
   const validUntil = new Date(today); validUntil.setDate(validUntil.getDate()+30);
   const fmt2 = d => d.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
 
-  const bandIdx = getBandIdx(learners, currentProduct);
-
   let productName, productDesc, productIcon, colourClass, rows, total, includes;
 
-  if (currentProduct === 'courses') {
-    productName = 'ecert Courses';
-    productDesc = 'Per-course access · No contract · 90-day access per course';
-    productIcon = '🎓'; colourClass = 'purple';
-    const pricePerCourse = COURSE_PRICES[bandIdx];
-    let courseMultiDisc = numCourses >= 5 ? 0.15 : numCourses >= 3 ? 0.10 : 0;
-    const subtotal = pricePerCourse * numCourses;
-    const discAmt = +(subtotal * courseMultiDisc).toFixed(2);
-    const afterMulti = subtotal - discAmt;
-    const bpAmt = +(afterMulti * bpDisc/100).toFixed(2);
-    const afterBP2 = +(afterMulti - bpAmt).toFixed(2);
-    const upfrontAmt2 = +(afterBP2 * upfrontDisc/100).toFixed(2);
-    total = +(afterBP2 - upfrontAmt2).toFixed(2);
-    rows = [
-      ['Staff band', bandIdx===0?'1–10 staff':bandIdx===1?'11–20 staff':bandIdx===2?'21–50 staff':bandIdx===3?'51–100 staff':'101–200 staff', ''],
-      ['Price per course', '£'+pricePerCourse+'.00', ''],
-      ['Number of courses', numCourses + ' course' + (numCourses>1?'s':''), ''],
-      ['Subtotal', '', '£'+subtotal.toFixed(2)],
-      courseMultiDisc > 0 ? ['Multi-course discount ('+courseMultiDisc*100+'%)', '', '−£'+discAmt.toFixed(2)] : null,
-      bpDisc > 0 ? ['Discount ('+bpDisc+'%)', '', '−£'+bpAmt.toFixed(2)] : null,
-    ].filter(Boolean);
-    includes = ['Access for all '+learners+' staff members','90 days access per course','CPD-accredited certificates on completion','Full admin dashboard — track completions','Course available on any device, any time'];
-  } else {
-    const base = currentProduct === 'core' ? 25 : 45;
-    const yearDisc = YEAR_DISC[yearVal];
-    const ppl = subPrice(base, bandIdx, yearDisc);
-    const bpAmt = +(ppl * bpDisc/100).toFixed(2);
-    const afterBPPPL = +(ppl - bpAmt).toFixed(2);
-    const upfrontAmtSub = +(afterBPPPL * learners * upfrontDisc/100).toFixed(2);
-    const finalPPL = afterBPPPL;
-    total = +(afterBPPPL * learners - upfrontAmtSub).toFixed(2);
-    const y1Total = +(subPrice(base, bandIdx, 0) * learners).toFixed(2);
-    const saving = yearVal > 1 ? '£'+(y1Total - total).toFixed(2)+' saving vs Year 1' : null;
+  if (currentProduct === 'essentials' || currentProduct === '360') {
+    if (users < 1) { alert('Please enter number of users.'); return; }
+    const bandIdx  = getSubBandIdx(users);
+    if (bandIdx === -1) { alert('Please enter a valid number of users.'); return; }
 
-    if (currentProduct === 'core') {
-      productName = 'Core Compliance'; productIcon = '📘'; colourClass = '';
-      productDesc = 'Annual subscription · 15 CQC mandatory courses · Overdue alerts · CQC-ready reports';
-      includes = ['15 CQC mandatory compliance courses','Live compliance dashboard — all staff at a glance','Automated overdue alerts before inspection','CQC-ready compliance report — one click','New starter onboarding pathways','Digital certificate management','Minimum '+learners+' learners'];
+    const baseArr   = currentProduct === 'essentials' ? ESS_Y1 : C360_Y1;
+    const y1PPL     = baseArr[bandIdx];
+    const yearDisc  = YEAR_DISC[yearVal];
+    const afterYear = +(y1PPL * (1 - yearDisc)).toFixed(2);
+    const bpAmt     = +(afterYear * bpDisc / 100).toFixed(2);
+    const finalPPL  = +(afterYear - bpAmt).toFixed(2);
+    const subtotal  = +(finalPPL * users).toFixed(2);
+    const upfrontAmt= +(subtotal * upfrontDisc / 100).toFixed(2);
+    total           = +(subtotal - upfrontAmt).toFixed(2);
+    const y1Total   = +(y1PPL * users).toFixed(2);
+    const saving    = yearVal > 1 ? fmt(y1Total - subtotal) + ' saving vs Year 1' : null;
+
+    if (currentProduct === 'essentials') {
+      productName = 'Compliance Essentials'; productIcon = '📘'; colourClass = '';
+      productDesc = 'Annual subscription · 15–18 CQC mandatory courses · Overdue alerts · CQC-ready reports';
+      includes = [
+        '15–18 CQC mandatory compliance courses',
+        'Live compliance dashboard — all staff at a glance',
+        'Automated overdue alerts before inspection',
+        'CQC-ready compliance report — one click',
+        'New starter onboarding pathways',
+        'Digital certificate management',
+        users + ' users included',
+      ];
     } else {
-      productName = 'Compliance Unlimited'; productIcon = '🚀'; colourClass = 'teal';
-      productDesc = 'Annual subscription · Full 60+ course library · Unlimited Care Certificates · Dedicated Account Manager';
-      includes = ['Full 60+ course library — unlimited access','Unlimited Care Certificate credits included','Executive compliance dashboard','Dedicated Account Manager','Role-based course assignment','Multi-site management dashboard','Automated renewals & reminders'];
+      productName = 'Compliance 360'; productIcon = '🚀'; colourClass = 'c360';
+      productDesc = 'Annual subscription · Full 50+ course library · Unlimited Care Certificates · Dedicated Account Manager';
+      includes = [
+        'Full 50+ course library — unlimited access',
+        'Unlimited Care Certificate credits included',
+        'Compliance dashboard & CQC-ready reports',
+        'Dedicated Account Manager',
+        'Role-based course assignment',
+        'Multi-site management dashboard',
+        'Automated renewals & reminders',
+      ];
     }
 
-    const bandBands = ['','5–15','16–30','31–60','61–100','101–200'];
     rows = [
-      ['Learner band', bandBands[bandIdx]+' learners', ''],
-      ['Contract year', 'Year '+yearVal+(yearVal>1?' ('+yearDisc*100+'% discount)':''), ''],
-      ['Price per learner / year', '', '£'+ppl.toFixed(2)],
-      ['Number of learners', learners, ''],
-      bpDisc > 0 ? ['Agent discount ('+bpDisc+'%)', '', '−£'+bpAmt.toFixed(2)+' per learner'] : null,
-      upfrontDisc > 0 ? ['⚠️ Paid upfront discount ('+upfrontDisc+'%)', 'Manager approved — full payment on signing', '−£'+upfrontAmtSub.toFixed(2)] : null,
-      saving ? ['Saving vs Year 1', saving, ''] : null,
+      ['User band',              SUB_BANDS[bandIdx].label, ''],
+      ['Contract year',          'Year ' + yearVal + (yearVal > 1 ? ' (' + (yearDisc*100) + '% discount)' : ''), ''],
+      ['Price per user / year',  '', fmt(y1PPL)],
+      ['Year ' + yearVal + ' rate', '', fmt(afterYear)],
+      ['Number of users',        users, ''],
+      ['Subtotal',               '', fmt(subtotal)],
+      bpDisc > 0    ? ['Agent discount (' + bpDisc + '%)',                   '', '−' + fmt(subtotal * bpDisc / 100)] : null,
+      upfrontDisc>0 ? ['⚠️ Paid upfront discount (' + upfrontDisc + '%)',    'Manager approved', '−' + fmt(upfrontAmt)] : null,
+      saving        ? ['Saving vs Year 1',                                    saving, ''] : null,
+    ].filter(Boolean);
+
+  } else if (currentProduct === 'flex') {
+    if (flexQty < 1) { alert('Please enter number of credits.'); return; }
+    const pack     = FLEX_PACKS[flexPack];
+    const cpcFinal = +(pack.cpc * (1 - bpDisc/100)).toFixed(2);
+    const subtotal = +(cpcFinal * flexQty).toFixed(2);
+    const upfrontAmt = +(subtotal * upfrontDisc / 100).toFixed(2);
+    total = +(subtotal - upfrontAmt).toFixed(2);
+
+    productName = 'Flex Credits'; productIcon = '⚡'; colourClass = 'flex';
+    productDesc = 'Pay as you go · No subscription · Credits never expire · 1 credit = 1 course';
+    includes = [
+      flexQty + ' credits — never expire',
+      'Access to full 50+ course library',
+      'Compliance dashboard included',
+      'CQC-ready reports',
+      'Digital certificates on completion',
+      '1 credit = 1 course for 1 learner',
+    ];
+    rows = [
+      ['Credit pack',           pack.label, ''],
+      ['Standard rate',         '', fmt(pack.cpc) + '/credit'],
+      ['Credits purchased',     flexQty, ''],
+      ['Subtotal',              '', fmt(pack.cpc * flexQty)],
+      bpDisc > 0    ? ['Agent discount (' + bpDisc + '%)',                '','−' + fmt(pack.cpc * flexQty * bpDisc/100)] : null,
+      upfrontDisc>0 ? ['⚠️ Paid upfront discount (' + upfrontDisc + '%)', 'Manager approved', '−' + fmt(upfrontAmt)] : null,
+    ].filter(Boolean);
+
+  } else if (currentProduct === 'carecert') {
+    if (ccQty < 1) { alert('Please enter number of Care Certificate credits.'); return; }
+    const rate     = getCCRate(ccQty);
+    const subtotal = +(rate * ccQty).toFixed(2);
+    const bpAmt    = +(subtotal * bpDisc / 100).toFixed(2);
+    const afterBP  = +(subtotal - bpAmt).toFixed(2);
+    const upfrontAmt = +(afterBP * upfrontDisc / 100).toFixed(2);
+    total = +(afterBP - upfrontAmt).toFixed(2);
+
+    productName = 'Care Certificate Credits'; productIcon = '🎓'; colourClass = 'carecert';
+    productDesc = '1 credit = 1 full Care Certificate · All 16 standards · Credits never expire';
+    includes = [
+      ccQty + ' Care Certificate credits',
+      'All 16 Care Certificate standards',
+      'Built-in examination module',
+      'Exclusive assessor portal',
+      'Instant digital certificate on pass',
+      'Credits never expire — use at your pace',
+    ];
+    rows = [
+      ['Credits purchased',     ccQty, ''],
+      ['Rate',                  ccQty >= 50 ? 'Bulk rate (50+ credits)' : 'Standard rate (1–49 credits)', fmt(rate) + '/credit'],
+      ['Subtotal',              '', fmt(subtotal)],
+      bpDisc > 0    ? ['Agent discount (' + bpDisc + '%)',                '','−' + fmt(bpAmt)] : null,
+      upfrontDisc>0 ? ['⚠️ Paid upfront discount (' + upfrontDisc + '%)', 'Manager approved', '−' + fmt(upfrontAmt)] : null,
     ].filter(Boolean);
   }
 
@@ -637,7 +814,7 @@ function generateQuote() {
         <thead><tr><th>Item</th><th>Detail</th><th>Amount</th></tr></thead>
         <tbody>
           ${rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}
-          <tr class="total-row ${colourClass}"><td colspan="2"><strong>TOTAL ${currentProduct === 'courses' ? '' : '/ YEAR (exc. VAT)'}</strong></td><td><strong>£${total.toFixed(2)}</strong>${currentProduct !== 'courses' ? ' <span class="saving-tag">exc. VAT</span>' : ''}</td></tr>
+          <tr class="total-row ${colourClass}"><td colspan="2"><strong>TOTAL (exc. VAT)</strong></td><td><strong>${fmt(total)}</strong></td></tr>
         </tbody>
       </table>
       <div class="q-section-title">What's Included</div>
@@ -647,7 +824,7 @@ function generateQuote() {
       <div class="q-validity">
         📅 <strong>Quote validity:</strong> This quotation is valid until ${fmt2(validUntil)}. Pricing is subject to change after this date.
       </div>
-      ${upfrontDisc > 0 ? '<div style="background:#FFEBEE;border:1px solid #C62828;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:#C62828;"><strong>⚠️ Paid Upfront Discount Applied ('+upfrontDisc+'%)</strong><br>This quote includes a '+upfrontDisc+'% discount in exchange for full upfront payment on signing. This discount has been manager-approved and is conditional on payment being received within 7 days of agreement.</div>' : ''}
+      ${upfrontDisc > 0 ? `<div style="background:#FFEBEE;border:1px solid #C62828;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:#C62828;"><strong>⚠️ Paid Upfront Discount Applied (${upfrontDisc}%)</strong><br>This quote includes a ${upfrontDisc}% discount in exchange for full upfront payment on signing. Conditional on payment received within 7 days of agreement.</div>` : ''}
       <div class="q-cta">
         <h3>Ready to get started?</h3>
         <p>Contact your ecert account manager to accept this quote or arrange a demo · info@ecerttraining.co.uk · 020 3817 0891</p>
@@ -663,18 +840,11 @@ function generateQuote() {
 }
 
 function savePDF() {
-  // Force browser into a state that defaults to Save as PDF
-  // We temporarily set the document title to become the PDF filename
   const originalTitle = document.title;
   const org = document.getElementById('org-name').value || 'ecert-proposal';
   const ref = document.querySelector('.ref-num') ? document.querySelector('.ref-num').textContent : '';
   document.title = 'ecert-Quote-' + org.replace(/[^a-zA-Z0-9]/g, '-') + (ref ? '-' + ref : '');
-  
-  // Use the print API but with CSS we force Save as PDF behaviour
-  // Modern browsers default to PDF when print-color-adjust is set
   window.print();
-  
-  // Restore title after dialog opens
   setTimeout(() => { document.title = originalTitle; }, 1000);
 }
 </script>
